@@ -224,31 +224,25 @@ namespace SecurIT_Memory
         /// </summary>
         public void MelangerCartesNonTrouvees()
         {
-            var rnd = new Random();
+            // Récupérer les index des cartes non trouvées
+            var indexes = _cartes
+                .Select((c, i) => new { Carte = c, Index = i })
+                .Where(x => !x.Carte.EstTrouvee)
+                .Select(x => x.Index)
+                .ToList();
 
-            // Récupérer les cartes non trouvées
-            var nonTrouvees = _cartes.Where(c => !c.EstTrouvee).ToList();
-
-            // Mélange Fisher-Yates
-            for (int i = nonTrouvees.Count - 1; i > 0; i--)
+            // Mélanger les index
+            for (int i = indexes.Count - 1; i > 0; i--)
             {
-                int j = rnd.Next(i + 1);
-                var tmp = nonTrouvees[i];
-                nonTrouvees[i] = nonTrouvees[j];
-                nonTrouvees[j] = tmp;
-            }
+                int j = _rng.Next(i + 1);
 
-            // Réinjecter dans la liste principale
-            int idx = 0;
-            for (int i = 0; i < _cartes.Count; i++)
-            {
-                if (!_cartes[i].EstTrouvee)
-                {
-                    _cartes[i] = nonTrouvees[idx];
-                    idx++;
-                }
+                // Échanger les cartes dans la liste principale
+                var temp = _cartes[indexes[i]];
+                _cartes[indexes[i]] = _cartes[indexes[j]];
+                _cartes[indexes[j]] = temp;
             }
         }
+
 
     }
 

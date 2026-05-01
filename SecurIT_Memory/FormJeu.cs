@@ -72,6 +72,9 @@ namespace SecurIT_Memory
             _tailleGrille = tailleGrille;
             _jeu = new JeuMemory();
 
+            ScoreRepository.Initialiser(); // ajout pour initialiser la base de données des scores
+
+
             SonManager.Initialiser();
 
             InitialiserUI(); // calcule la taille de la fenêtre selon la taille de la grille

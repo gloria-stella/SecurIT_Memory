@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
+using Microsoft.VisualBasic;
+
 
 namespace SecurIT_Memory
 {
@@ -55,6 +57,8 @@ namespace SecurIT_Memory
         private Timer _timerChrono;
         private Timer _timerRetour;
         private Timer _timerAnimFond;
+        private Timer _timerHardcore;
+        private bool _modeHardcore = true; // Active le mode Hardcore
         private DateTime _heureDebut;
         private int _animTick = 0;
         private bool _cliquesBloquees = false;
@@ -183,6 +187,19 @@ namespace SecurIT_Memory
                 _panelGrille.Invalidate(false);
             };
             _timerAnimFond.Start();
+            // ── Timer Hardcore : mélange toutes les 30 secondes ───────────────
+            _timerHardcore = new Timer();
+            _timerHardcore.Interval = 30000; // 30 secondes
+            _timerHardcore.Tick += (s, e) =>
+            {
+                if (_modeHardcore)
+                {
+                    _jeu.MelangerCartesNonTrouvees();
+                    RafraichirGrille();
+                }
+            };
+            _timerHardcore.Start();
+
         }
 
         // ── Démarrage d'une partie ─────────────────────────────────────
@@ -224,7 +241,7 @@ namespace SecurIT_Memory
             // Nettoyer les anciennes PictureBox et libérer leurs images
             foreach (PictureBox pb in _pbVersCarte.Keys)
             {
-                pb.Image?.Dispose();
+                pb.Image = null;
                 pb.Click -= PictureBox_Click;
             }
             _panelGrille.Controls.Clear();
@@ -450,6 +467,26 @@ namespace SecurIT_Memory
                          $"Temps   : {t.Minutes:00}:{t.Seconds:00}\n" +
                          $"Essais  : {_jeu.NombreEssais}\n\n" +
                          $"Rejouer ?";
+            // ── Enregistrement du score SQL ───────────────────────────────
+            var duree = DateTime.Now - _heureDebut;
+            int tempsSec = (int)duree.TotalSeconds;
+
+            string nom = Interaction.InputBox(
+                    "Entrez votre nom pour le classement :",
+                    "Nouveau score",
+                    "Joueur");
+
+            if (string.IsNullOrWhiteSpace(nom))
+                nom = "Joueur";
+
+            ScoreRepository.AjouterScore(new ScoreEntry
+            {
+                Joueur = nom,
+                Grille = _tailleGrille,
+                Essais = _jeu.NombreEssais,
+                TempsSecondes = tempsSec,
+                DatePartie = DateTime.Now
+            });
 
             if (MessageBox.Show(msg, "SecurIT Memory — Victoire !",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)

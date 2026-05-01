@@ -219,6 +219,37 @@ namespace SecurIT_Memory
                 _cartes[j] = temp;
             }
         }
+        /// <summary>
+        /// Mélange uniquement les cartes non trouvées (mode Hardcore).
+        /// </summary>
+        public void MelangerCartesNonTrouvees()
+        {
+            var rnd = new Random();
+
+            // Récupérer les cartes non trouvées
+            var nonTrouvees = _cartes.Where(c => !c.EstTrouvee).ToList();
+
+            // Mélange Fisher-Yates
+            for (int i = nonTrouvees.Count - 1; i > 0; i--)
+            {
+                int j = rnd.Next(i + 1);
+                var tmp = nonTrouvees[i];
+                nonTrouvees[i] = nonTrouvees[j];
+                nonTrouvees[j] = tmp;
+            }
+
+            // Réinjecter dans la liste principale
+            int idx = 0;
+            for (int i = 0; i < _cartes.Count; i++)
+            {
+                if (!_cartes[i].EstTrouvee)
+                {
+                    _cartes[i] = nonTrouvees[idx];
+                    idx++;
+                }
+            }
+        }
+
     }
 
     /// <summary>

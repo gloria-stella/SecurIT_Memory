@@ -25,7 +25,7 @@ namespace SecurIT_Memory
         private string _cheminImage;
         private EtatCarte _etat;
 
-        // ── Propriétés publiques (encapsulation) ───────────────────────
+        // ── Propriétés publiques (encapsulation) ───────────
 
         /// <summary>Identifiant de la paire. Deux cartes avec le même ID forment une paire valide.</summary>
         public int IdPaire
@@ -67,11 +67,9 @@ namespace SecurIT_Memory
             get { return _etat == EtatCarte.Trouvee; }
         }
 
-        // ── Constructeur ───────────────────────────────────────────────
+        // ── Constructeur ───────
 
-        /// <summary>
         /// Crée une nouvelle carte avec son identifiant de paire et son icône.
-        /// </summary>
         /// <param name="idPaire">Identifiant partagé avec la carte jumelle.</param>
         /// <param name="nomIcone">Nom de l'icône cybersécurité.</param>
         /// <param name="cheminImage">Chemin vers l'image de la face.</param>

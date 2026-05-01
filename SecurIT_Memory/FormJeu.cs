@@ -70,12 +70,12 @@ namespace SecurIT_Memory
 
             SonManager.Initialiser();
 
-            InitialiserUI();
-            InitialiserTimers();
-            DemarrerPartie();
+            InitialiserUI(); // calcule la taille de la fenêtre selon la taille de la grille
+            InitialiserTimers(); // mis a jour du chrono chaque seconde
+            DemarrerPartie(); // c'est le coeur du progr , il initialise le jeu, construit la grille de PictureBox et lance le chrono
         }
 
-        // ── Construction de l'interface ────────────────────────────────
+        // ── Construction de l'interface ─────────────────
         private void InitialiserUI()
         {
             int largGrille = _tailleGrille * (TAILLE_CARTE + ESPACEMENT) + ESPACEMENT;

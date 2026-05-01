@@ -6,7 +6,7 @@ namespace SecurIT_Memory
 {
     public class FormMenu : Form
     {
-        private Label lblTitre;
+        private Label lblTitre; // les variables qui servent a afficher les textes , les boutons , ...
         private Label lblSousTitre;
         private Button btnJouer;
         private Button btnOptions;
@@ -16,7 +16,7 @@ namespace SecurIT_Memory
         private int _animTick = 0;
         private int _tailleGrille = 4;
 
-        // Palette Cyber Neon
+        // Palette Cyber Neon ; couleurs utilisé dasn le thème du jeu
         public static readonly Color NOIR = Color.FromArgb(5, 5, 5);
         public static readonly Color VERT_NEON = Color.FromArgb(0, 255, 106);
         public static readonly Color BLEU_NEON = Color.FromArgb(0, 229, 255);
@@ -24,7 +24,8 @@ namespace SecurIT_Memory
         public static readonly Color VIOLET_NEON = Color.FromArgb(179, 0, 255);
         public static readonly Color GRIS_DARK = Color.FromArgb(26, 26, 26);
 
-        public FormMenu()
+        // Constructeur du formulaire menu , quand le menu s'ouvre on construit le menu et on demmare l'animation
+        public FormMenu() 
         {
             InitialiserComposants();
             InitialiserTimerAnim();
@@ -32,8 +33,8 @@ namespace SecurIT_Memory
 
         private void InitialiserComposants()
         {
-            this.Text = "SecurIT Memory";
-            this.Size = new Size(500, 620);
+            this.Text = "SecurIT Memory"; //c'est ici quon a construit toute linterface du menu
+            this.Size = new Size(500, 620); // taille fixe , fond noir ,...
             this.MinimumSize = new Size(500, 620);
             this.MaximumSize = new Size(500, 620);
             this.StartPosition = FormStartPosition.CenterScreen;

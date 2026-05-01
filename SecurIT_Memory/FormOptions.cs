@@ -6,20 +6,21 @@ namespace SecurIT_Memory
 {
     public class FormOptions : Form
     {
-        private Label lblTitre;
+        private Label lblTitre; // choix de la grille 
         private RadioButton rb4x4;
         private RadioButton rb6x6;
         private Button btnValider;
         private Button btnAnnuler;
-        private Timer _timerAnim;
+        private Timer _timerAnim; // anime lle fond du formulaire avec des lignes et un scan lumineux
         private int _animTick = 0;
 
-        public int TailleGrilleChoisie { get; private set; }
+        public int TailleGrilleChoisie { get; private set; } // 4 ou 6 selon le choix de l'utilisateur
 
-        public FormOptions(int tailleActuelle)
+        // constructeur
+        public FormOptions(int tailleActuelle) // il recupere la taille actuelle pour precocher le bon bouton
         {
             TailleGrilleChoisie = tailleActuelle;
-            InitialiserComposants();
+            InitialiserComposants(); // il construil l'interface avec iniatilisercomposants et il demarre l'animation avec initialisertimeranim
             if (tailleActuelle == 6) rb6x6.Checked = true;
             else rb4x4.Checked = true;
 
@@ -31,7 +32,7 @@ namespace SecurIT_Memory
 
         private void InitialiserComposants()
         {
-            this.Text = "Options — SecurIT Memory";
+            this.Text = "Options — SecurIT Memory"; // taille fixe , position centrée, fond noir, bordure fixe, pas de redimensionnement, double buffering pour eviter les scintillements
             this.Size = new Size(400, 340);
             this.StartPosition = FormStartPosition.CenterParent;
             this.BackColor = FormMenu.NOIR;
@@ -71,7 +72,7 @@ namespace SecurIT_Memory
             rb6x6 = CreerRadio("6 x 6  —  18 paires  [ DIFFICILE ]", 155);
 
             btnValider = CreerBouton("✓  VALIDER", 220, FormMenu.VERT_NEON);
-            btnValider.DialogResult = DialogResult.OK;
+            btnValider.DialogResult = DialogResult.OK; // qd on clique la fenetre renvoie ok , la taille chois est enregistre et lanimation s'arrete 
             btnValider.Click += (s, e) =>
             {
                 TailleGrilleChoisie = rb6x6.Checked ? 6 : 4;
@@ -103,7 +104,7 @@ namespace SecurIT_Memory
             return rb;
         }
 
-        private Button CreerBouton(string texte, int posY, Color couleur)
+        private Button CreerBouton(string texte, int posY, Color couleur) //CreerBouton() est une méthode utilitaire qui crée un bouton stylé Cyber Neon sans reecrire l code plusieurs fois 
         {
             var btn = new Button();
             btn.Text = texte;

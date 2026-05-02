@@ -4,106 +4,109 @@ using System.Windows.Forms;
 
 namespace SecurIT_Memory
 {
+    /// <summary>
+    /// Menu principal de l'application SecurIT Memory.
+    /// Donne accès à : Jouer, Leaderboard, Options, Quitter.
+    /// </summary>
     public class FormMenu : Form
     {
-        private Label lblTitre; // les variables qui servent a afficher les textes , les boutons , ...
-        private Label lblSousTitre;
-        private Button btnJouer;
-        private Button btnOptions;
-        private Button btnQuitter;
-        private Label lblVersion;
+        private Label _lblTitre;
+        private Label _lblSousTitre;
+        private Button _btnJouer;
+        private Button _btnLeaderboard;
+        private Button _btnOptions;
+        private Button _btnQuitter;
+        private Label _lblVersion;
         private Timer _timerAnim;
         private int _animTick = 0;
+
+        // Paramètres de jeu (choisis dans Options)
         private int _tailleGrille = 4;
+        private ThemeCartes _theme = ThemeCartes.Cybersecurite;
+        private bool _hardcore = false;
 
-        // Palette Cyber Neon ; couleurs utilisé dasn le thème du jeu
-        public static readonly Color NOIR = Color.FromArgb(5, 5, 5);
-        public static readonly Color VERT_NEON = Color.FromArgb(0, 255, 106);
-        public static readonly Color BLEU_NEON = Color.FromArgb(0, 229, 255);
-        public static readonly Color ROUGE_NEON = Color.FromArgb(255, 0, 76);
-        public static readonly Color VIOLET_NEON = Color.FromArgb(179, 0, 255);
-        public static readonly Color GRIS_DARK = Color.FromArgb(26, 26, 26);
+        // Palette accessible par les autres classes
+        public static readonly Color NOIR = ThemeCyber.NOIR;
+        public static readonly Color VERT_NEON = ThemeCyber.VERT_NEON;
+        public static readonly Color BLEU_NEON = ThemeCyber.BLEU_NEON;
+        public static readonly Color ROUGE_NEON = ThemeCyber.ROUGE_NEON;
 
-        // Constructeur du formulaire menu , quand le menu s'ouvre on construit le menu et on demmare l'animation
-        public FormMenu() 
+        public FormMenu()
         {
+            ScoreManager.Initialiser();
             InitialiserComposants();
-            InitialiserTimerAnim();
+            InitialiserAnim();
         }
 
         private void InitialiserComposants()
         {
-            this.Text = "SecurIT Memory"; //c'est ici quon a construit toute linterface du menu
-            this.Size = new Size(500, 620); // taille fixe , fond noir ,...
-            this.MinimumSize = new Size(500, 620);
-            this.MaximumSize = new Size(500, 620);
+            this.Text = "SecurIT Memory";
+            this.Size = new Size(500, 660);
+            this.MinimumSize = new Size(500, 660);
+            this.MaximumSize = new Size(500, 660);
             this.StartPosition = FormStartPosition.CenterScreen;
-            this.BackColor = NOIR;
+            this.BackColor = ThemeCyber.NOIR;
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.DoubleBuffered = true;
             this.Paint += FormMenu_Paint;
 
-            lblTitre = new Label();
-            lblTitre.Text = "SECURIT";
-            lblTitre.Font = new Font("Courier New", 38, FontStyle.Bold);
-            lblTitre.ForeColor = VERT_NEON;
-            lblTitre.BackColor = Color.Transparent;
-            lblTitre.AutoSize = true;
-            lblTitre.Location = new Point(105, 55);
+            _lblTitre = new Label();
+            _lblTitre.Text = "SECURIT";
+            _lblTitre.Font = new Font("Courier New", 38, FontStyle.Bold);
+            _lblTitre.ForeColor = ThemeCyber.VERT_NEON;
+            _lblTitre.BackColor = Color.Transparent;
+            _lblTitre.AutoSize = true;
+            _lblTitre.Location = new Point(105, 55);
 
-            lblSousTitre = new Label();
-            lblSousTitre.Text = "MEMORY CHALLENGE  —  CYBER EDITION";
-            lblSousTitre.Font = new Font("Courier New", 8);
-            lblSousTitre.ForeColor = BLEU_NEON;
-            lblSousTitre.BackColor = Color.Transparent;
-            lblSousTitre.AutoSize = true;
-            lblSousTitre.Location = new Point(82, 118);
+            _lblSousTitre = new Label();
+            _lblSousTitre.Text = "MEMORY CHALLENGE  —  CYBER EDITION";
+            _lblSousTitre.Font = new Font("Courier New", 8);
+            _lblSousTitre.ForeColor = ThemeCyber.BLEU_NEON;
+            _lblSousTitre.BackColor = Color.Transparent;
+            _lblSousTitre.AutoSize = true;
+            _lblSousTitre.Location = new Point(82, 118);
 
-            btnJouer = CreerBouton("►  JOUER", 200, VERT_NEON);
-            btnOptions = CreerBouton("⚙  OPTIONS", 290, BLEU_NEON);
-            btnQuitter = CreerBouton("✕  QUITTER", 380, ROUGE_NEON);
+            _btnJouer = CreerBouton("►  JOUER", 200, ThemeCyber.VERT_NEON);
+            _btnLeaderboard = CreerBouton("🏆  LEADERBOARD", 280, ThemeCyber.VIOLET_NEON);
+            _btnOptions = CreerBouton("⚙  OPTIONS", 360, ThemeCyber.BLEU_NEON);
+            _btnQuitter = CreerBouton("✕  QUITTER", 440, ThemeCyber.ROUGE_NEON);
 
-            btnJouer.Click += BtnJouer_Click;
-            btnOptions.Click += BtnOptions_Click;
-            btnQuitter.Click += BtnQuitter_Click;
+            _btnJouer.Click += BtnJouer_Click;
+            _btnLeaderboard.Click += BtnLeaderboard_Click;
+            _btnOptions.Click += BtnOptions_Click;
+            _btnQuitter.Click += BtnQuitter_Click;
 
-            lblVersion = new Label();
-            lblVersion.Text = "// SecurIT v1.0  —  Salon de l'Innovation Tech";
-            lblVersion.Font = new Font("Courier New", 7);
-            lblVersion.ForeColor = Color.FromArgb(0, 80, 40);
-            lblVersion.BackColor = Color.Transparent;
-            lblVersion.AutoSize = true;
-            lblVersion.Location = new Point(90, 572);
+            _lblVersion = new Label();
+            _lblVersion.Text = "// SecurIT v1.0  —  Salon de l'Innovation Tech";
+            _lblVersion.Font = new Font("Courier New", 7);
+            _lblVersion.ForeColor = Color.FromArgb(0, 80, 40);
+            _lblVersion.BackColor = Color.Transparent;
+            _lblVersion.AutoSize = true;
+            _lblVersion.Location = new Point(90, 615);
 
-            this.Controls.Add(lblTitre);
-            this.Controls.Add(lblSousTitre);
-            this.Controls.Add(btnJouer);
-            this.Controls.Add(btnOptions);
-            this.Controls.Add(btnQuitter);
-            this.Controls.Add(lblVersion);
+            this.Controls.Add(_lblTitre);
+            this.Controls.Add(_lblSousTitre);
+            this.Controls.Add(_btnJouer);
+            this.Controls.Add(_btnLeaderboard);
+            this.Controls.Add(_btnOptions);
+            this.Controls.Add(_btnQuitter);
+            this.Controls.Add(_lblVersion);
         }
 
         private void FormMenu_Paint(object sender, PaintEventArgs e)
         {
-            Graphics g = e.Graphics;
-
-            // Grille de fond verte fantôme
-            using (Pen pen = new Pen(Color.FromArgb(10, 0, 255, 106), 1))
+            var g = e.Graphics;
+            using (var pen = new Pen(Color.FromArgb(10, 0, 255, 106), 1))
             {
                 for (int x = 0; x < Width; x += 40) g.DrawLine(pen, x, 0, x, Height);
                 for (int y = 0; y < Height; y += 40) g.DrawLine(pen, 0, y, Width, y);
             }
-
-            // Ligne de scan animée
             int scanY = (_animTick * 3) % Height;
-            using (Pen sp = new Pen(Color.FromArgb(35, 0, 255, 106), 1))
+            using (var sp = new Pen(Color.FromArgb(35, 0, 255, 106), 1))
                 g.DrawLine(sp, 0, scanY, Width, scanY);
-
-            // Séparateur sous le sous-titre
-            using (Pen lp = new Pen(Color.FromArgb(70, 0, 255, 106), 1))
+            using (var lp = new Pen(Color.FromArgb(70, 0, 255, 106), 1))
                 g.DrawLine(lp, 50, 152, Width - 50, 152);
 
-            // Coins décoratifs
             DessinerCoin(g, 10, 10, 1, 1);
             DessinerCoin(g, Width - 26, 10, -1, 1);
             DessinerCoin(g, 10, Height - 26, 1, -1);
@@ -119,7 +122,7 @@ namespace SecurIT_Memory
             }
         }
 
-        private void InitialiserTimerAnim()
+        private void InitialiserAnim()
         {
             _timerAnim = new Timer();
             _timerAnim.Interval = 30;
@@ -138,7 +141,7 @@ namespace SecurIT_Memory
             btn.FlatAppearance.BorderColor = couleur;
             btn.FlatAppearance.BorderSize = 1;
             btn.FlatAppearance.MouseOverBackColor = Color.FromArgb(30, couleur.R, couleur.G, couleur.B);
-            btn.Size = new Size(280, 55);
+            btn.Size = new Size(280, 52);
             btn.Location = new Point(110, posY);
             btn.Cursor = Cursors.Hand;
             return btn;
@@ -147,15 +150,24 @@ namespace SecurIT_Memory
         private void BtnJouer_Click(object sender, EventArgs e)
         {
             _timerAnim.Stop();
-            new FormJeu(_tailleGrille).ShowDialog(this);
+            new FormJeu(_tailleGrille, _theme, _hardcore).ShowDialog(this);
             _timerAnim.Start();
+        }
+
+        private void BtnLeaderboard_Click(object sender, EventArgs e)
+        {
+            new FormLeaderboard().ShowDialog(this);
         }
 
         private void BtnOptions_Click(object sender, EventArgs e)
         {
-            var fo = new FormOptions(_tailleGrille);
+            var fo = new FormOptions(_tailleGrille, _theme, _hardcore);
             if (fo.ShowDialog(this) == DialogResult.OK)
+            {
                 _tailleGrille = fo.TailleGrilleChoisie;
+                _theme = fo.ThemeChoisi;
+                _hardcore = fo.ModeHardcoreChoisi;
+            }
         }
 
         private void BtnQuitter_Click(object sender, EventArgs e)

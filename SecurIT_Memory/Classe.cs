@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 
 namespace SecurIT_Memory
 {
@@ -15,19 +14,20 @@ namespace SecurIT_Memory
 
     /// <summary>
     /// Classe représentant une carte du jeu Memory SecurIT.
-    /// Respecte le principe d'encapsulation via des propriétés get/set.
+    /// Respecte le principe d'encapsulation POO via des propriétés get/private set.
     /// </summary>
     public class Carte
     {
         // ── Champs privés ──────────────────────────────────────────────
         private int _idPaire;
         private string _nomIcone;
-        private string _cheminImage;
+        private string _cheminImage;  // Emoji ou chemin PNG
         private EtatCarte _etat;
+        private bool _estRedTeam;
 
-        // ── Propriétés publiques (encapsulation) ───────────
+        // ── Propriétés publiques (encapsulation) ───────────────────────
 
-        /// <summary>Identifiant de la paire. Deux cartes avec le même ID forment une paire valide.</summary>
+        /// <summary>Identifiant de paire. Deux cartes avec le même ID forment une paire.</summary>
         public int IdPaire
         {
             get { return _idPaire; }
@@ -41,49 +41,58 @@ namespace SecurIT_Memory
             private set { _nomIcone = value; }
         }
 
-        /// <summary>Chemin vers le fichier image de la face de la carte.</summary>
+        /// <summary>Emoji ou chemin vers l'image affichée sur la face de la carte.</summary>
         public string CheminImage
         {
             get { return _cheminImage; }
-            set { _cheminImage = value; }
+            private set { _cheminImage = value; }
         }
 
         /// <summary>État actuel de la carte (Cachee, Revelee ou Trouvee).</summary>
         public EtatCarte Etat
         {
             get { return _etat; }
-            set { _etat = value; }
+            private set { _etat = value; }
         }
 
-        /// <summary>Indique si la carte est actuellement visible (révélée ou trouvée).</summary>
+        /// <summary>Indique si la carte appartient à la Red Team (menace).</summary>
+        public bool EstRedTeam
+        {
+            get { return _estRedTeam; }
+            private set { _estRedTeam = value; }
+        }
+
+        /// <summary>True si la carte est actuellement visible (révélée ou trouvée).</summary>
         public bool EstVisible
         {
             get { return _etat == EtatCarte.Revelee || _etat == EtatCarte.Trouvee; }
         }
 
-        /// <summary>Indique si la carte fait partie d'une paire trouvée.</summary>
+        /// <summary>True si la carte fait partie d'une paire trouvée.</summary>
         public bool EstTrouvee
         {
             get { return _etat == EtatCarte.Trouvee; }
         }
 
-        // ── Constructeur ───────
+        // ── Constructeur ───────────────────────────────────────────────
 
-        /// Crée une nouvelle carte avec son identifiant de paire et son icône.
+        /// <summary>Crée une nouvelle carte avec toutes ses informations.</summary>
         /// <param name="idPaire">Identifiant partagé avec la carte jumelle.</param>
-        /// <param name="nomIcone">Nom de l'icône cybersécurité.</param>
-        /// <param name="cheminImage">Chemin vers l'image de la face.</param>
-        public Carte(int idPaire, string nomIcone, string cheminImage)
+        /// <param name="nomIcone">Nom affiché sur la face de la carte.</param>
+        /// <param name="cheminImage">Emoji ou chemin PNG de l'icône.</param>
+        /// <param name="estRedTeam">True si la carte représente une menace Red Team.</param>
+        public Carte(int idPaire, string nomIcone, string cheminImage, bool estRedTeam = false)
         {
             _idPaire = idPaire;
             _nomIcone = nomIcone;
             _cheminImage = cheminImage;
-            _etat = EtatCarte.Cachee; // Une carte commence toujours face cachée
+            _estRedTeam = estRedTeam;
+            _etat = EtatCarte.Cachee; // Toujours cachée au départ
         }
 
         // ── Méthodes publiques ─────────────────────────────────────────
 
-        /// <summary>Révèle la carte (la retourne face visible temporairement).</summary>
+        /// <summary>Révèle la carte (retournement face visible temporaire).</summary>
         public void Reveler()
         {
             if (_etat == EtatCarte.Cachee)
@@ -96,16 +105,25 @@ namespace SecurIT_Memory
             _etat = EtatCarte.Trouvee;
         }
 
-        /// <summary>Remet la carte face cachée (utilisé quand une paire ne correspond pas).</summary>
+        /// <summary>Remet la carte face cachée (après échec de correspondance).</summary>
         public void Cacher()
         {
             if (_etat == EtatCarte.Revelee)
                 _etat = EtatCarte.Cachee;
         }
 
+        /// <summary>
+        /// Remet la carte à son état initial (Cachée).
+        /// Utilisé lors du démarrage d'une nouvelle partie.
+        /// </summary>
+        public void Reset()
+        {
+            _etat = EtatCarte.Cachee;
+        }
+
         /// <summary>Vérifie si cette carte forme une paire avec une autre carte.</summary>
         /// <param name="autreCarte">La carte à comparer.</param>
-        /// <returns>True si les deux cartes ont le même IdPaire.</returns>
+        /// <returns>True si même IdPaire et cartes différentes.</returns>
         public bool FormePaireAvec(Carte autreCarte)
         {
             if (autreCarte == null) return false;
@@ -114,7 +132,7 @@ namespace SecurIT_Memory
 
         public override string ToString()
         {
-            return $"Carte[ID={_idPaire}, Icone={_nomIcone}, Etat={_etat}]";
+            return $"Carte[ID={_idPaire}, Nom={_nomIcone}, Etat={_etat}, RedTeam={_estRedTeam}]";
         }
     }
 }

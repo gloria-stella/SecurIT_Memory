@@ -4,107 +4,134 @@ using System.Windows.Forms;
 
 namespace SecurIT_Memory
 {
+    /// <summary>
+    /// Formulaire d'options : taille de grille, thème des cartes, mode Hardcore.
+    /// </summary>
     public class FormOptions : Form
     {
-        private Label lblTitre; // choix de la grille 
+        // ── Contrôles ─────────────────────────────────────────────────
+        private Label lblTitre;
+        private Label lblGrille;
         private RadioButton rb4x4;
         private RadioButton rb6x6;
+        private Label lblTheme;
+        private RadioButton rbCyber;
+        private RadioButton rbMateriel;
+        private RadioButton rbLogiciel;
+        private RadioButton rbCrypto;
+        private Label lblHardcore;
+        private CheckBox chkHardcore;
+        private Label lblHardcoreInfo;
         private Button btnValider;
         private Button btnAnnuler;
-        private Timer _timerAnim; // anime lle fond du formulaire avec des lignes et un scan lumineux
+        private Timer _timerAnim;
         private int _animTick = 0;
 
-        public int TailleGrilleChoisie { get; private set; } // 4 ou 6 selon le choix de l'utilisateur
+        // ── Résultats ──────────────────────────────────────────────────
+        public int TailleGrilleChoisie { get; private set; }
+        public ThemeCartes ThemeChoisi { get; private set; }
+        public bool ModeHardcoreChoisi { get; private set; }
 
-        // constructeur
-        public FormOptions(int tailleActuelle) // il recupere la taille actuelle pour precocher le bon bouton
+        public FormOptions(int tailleActuelle, ThemeCartes themeActuel, bool hardcoreActuel)
         {
             TailleGrilleChoisie = tailleActuelle;
-            InitialiserComposants(); // il construil l'interface avec iniatilisercomposants et il demarre l'animation avec initialisertimeranim
-            if (tailleActuelle == 6) rb6x6.Checked = true;
-            else rb4x4.Checked = true;
+            ThemeChoisi = themeActuel;
+            ModeHardcoreChoisi = hardcoreActuel;
 
-            _timerAnim = new Timer();
-            _timerAnim.Interval = 30;
-            _timerAnim.Tick += (s, e) => { _animTick++; this.Invalidate(); };
-            _timerAnim.Start();
+            InitialiserComposants();
+            PreSelectionner(tailleActuelle, themeActuel, hardcoreActuel);
+            InitialiserAnim();
         }
 
         private void InitialiserComposants()
         {
-            this.Text = "Options — SecurIT Memory"; // taille fixe , position centrée, fond noir, bordure fixe, pas de redimensionnement, double buffering pour eviter les scintillements
-            this.Size = new Size(400, 340);
+            this.Text = "Options — SecurIT Memory";
+            this.Size = new Size(440, 520);
             this.StartPosition = FormStartPosition.CenterParent;
-            this.BackColor = FormMenu.NOIR;
+            this.BackColor = ThemeCyber.NOIR;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.DoubleBuffered = true;
-            this.Paint += (s, e) =>
-            {
-                var g = e.Graphics;
-                using (var pen = new Pen(Color.FromArgb(10, 0, 255, 106), 1))
-                {
-                    for (int x = 0; x < Width; x += 40) g.DrawLine(pen, x, 0, x, Height);
-                    for (int y = 0; y < Height; y += 40) g.DrawLine(pen, 0, y, Width, y);
-                }
-                int scanY = (_animTick * 3) % Height;
-                using (var sp = new Pen(Color.FromArgb(30, 0, 255, 106), 1))
-                    g.DrawLine(sp, 0, scanY, Width, scanY);
-            };
+            this.Paint += FormOptions_Paint;
 
-            lblTitre = new Label();
-            lblTitre.Text = "OPTIONS";
+            // ── Titre ──────────────────────────────────────────────────
+            lblTitre = CreerLabel("OPTIONS", 20, 18, ThemeCyber.VERT_NEON, true);
             lblTitre.Font = new Font("Courier New", 20, FontStyle.Bold);
-            lblTitre.ForeColor = FormMenu.VERT_NEON;
-            lblTitre.BackColor = Color.Transparent;
-            lblTitre.AutoSize = true;
-            lblTitre.Location = new Point(130, 20);
 
-            var lblGrille = new Label();
-            lblGrille.Text = "// TAILLE DE LA GRILLE";
-            lblGrille.Font = new Font("Courier New", 9);
-            lblGrille.ForeColor = Color.FromArgb(0, 160, 80);
-            lblGrille.BackColor = Color.Transparent;
-            lblGrille.AutoSize = true;
-            lblGrille.Location = new Point(40, 80);
+            // ── Section Grille ─────────────────────────────────────────
+            lblGrille = CreerLabel("// TAILLE DE LA GRILLE", 70, 10, Color.FromArgb(0, 160, 80));
+            rb4x4 = CreerRadio("4 × 4  —  8 paires   [ FACILE ]", 100);
+            rb6x6 = CreerRadio("6 × 6  —  18 paires  [ DIFFICILE ]", 130);
 
-            rb4x4 = CreerRadio("4 x 4  —  8 paires   [ FACILE ]", 115);
-            rb6x6 = CreerRadio("6 x 6  —  18 paires  [ DIFFICILE ]", 155);
+            // ── Section Thème ──────────────────────────────────────────
+            lblTheme = CreerLabel("// THÈME DES CARTES", 175, 10, Color.FromArgb(0, 160, 80));
+            rbCyber = CreerRadio("🔐  Cybersécurité  (par défaut)", 205);
+            rbMateriel = CreerRadio("💾  Matériel         (RAM, CPU, GPU...)", 235);
+            rbLogiciel = CreerRadio("🖥  Logiciel          (OS, Apps, Cloud...)", 265);
+            rbCrypto = CreerRadio("🗝  Cryptographie  (Clés, Hash, TLS...)", 295);
 
-            btnValider = CreerBouton("✓  VALIDER", 220, FormMenu.VERT_NEON);
-            btnValider.DialogResult = DialogResult.OK; // qd on clique la fenetre renvoie ok , la taille chois est enregistre et lanimation s'arrete 
-            btnValider.Click += (s, e) =>
-            {
-                TailleGrilleChoisie = rb6x6.Checked ? 6 : 4;
-                _timerAnim?.Stop();
-            };
+            // ── Section Hardcore ───────────────────────────────────────
+            lblHardcore = CreerLabel("// MODE HARDCORE", 340, 10, Color.FromArgb(180, 0, 40));
 
-            btnAnnuler = CreerBouton("✕  ANNULER", 220, FormMenu.ROUGE_NEON);
-            btnAnnuler.Location = new Point(220, 220);
+            chkHardcore = new CheckBox();
+            chkHardcore.Text = "Activer le mode HARDCORE";
+            chkHardcore.Font = new Font("Courier New", 10, FontStyle.Bold);
+            chkHardcore.ForeColor = ThemeCyber.ROUGE_NEON;
+            chkHardcore.BackColor = Color.Transparent;
+            chkHardcore.AutoSize = true;
+            chkHardcore.Location = new Point(50, 368);
+
+            lblHardcoreInfo = new Label();
+            lblHardcoreInfo.Text = "⚠  Les cartes non-trouvées bougent toutes les 30s !";
+            lblHardcoreInfo.Font = new Font("Courier New", 8);
+            lblHardcoreInfo.ForeColor = Color.FromArgb(180, 60, 60);
+            lblHardcoreInfo.BackColor = Color.Transparent;
+            lblHardcoreInfo.AutoSize = true;
+            lblHardcoreInfo.Location = new Point(50, 393);
+
+            // ── Boutons ────────────────────────────────────────────────
+            btnValider = CreerBouton("✓  VALIDER", ThemeCyber.VERT_NEON, 40, 428);
+            btnAnnuler = CreerBouton("✕  ANNULER", ThemeCyber.ROUGE_NEON, 230, 428);
+            btnValider.DialogResult = DialogResult.OK;
             btnAnnuler.DialogResult = DialogResult.Cancel;
-            btnAnnuler.Click += (s, e) => _timerAnim?.Stop();
+            btnValider.Click += BtnValider_Click;
 
-            this.Controls.Add(lblTitre);
-            this.Controls.Add(lblGrille);
-            this.Controls.Add(rb4x4);
-            this.Controls.Add(rb6x6);
-            this.Controls.Add(btnValider);
-            this.Controls.Add(btnAnnuler);
+            // ── Ajout des contrôles ────────────────────────────────────
+            this.Controls.AddRange(new Control[] {
+                lblTitre, lblGrille, rb4x4, rb6x6,
+                lblTheme, rbCyber, rbMateriel, rbLogiciel, rbCrypto,
+                lblHardcore, chkHardcore, lblHardcoreInfo,
+                btnValider, btnAnnuler
+            });
         }
 
-        private RadioButton CreerRadio(string texte, int posY)
+        // ── Helpers création contrôles ─────────────────────────────────
+
+        private Label CreerLabel(string texte, int y, int x, Color couleur, bool grand = false)
+        {
+            var l = new Label();
+            l.Text = texte;
+            l.Font = new Font("Courier New", grand ? 20 : 9);
+            l.ForeColor = couleur;
+            l.BackColor = Color.Transparent;
+            l.AutoSize = true;
+            l.Location = new Point(x == 20 ? 140 : x, y);
+            return l;
+        }
+
+        private RadioButton CreerRadio(string texte, int y)
         {
             var rb = new RadioButton();
             rb.Text = texte;
             rb.Font = new Font("Courier New", 10);
-            rb.ForeColor = Color.FromArgb(200, 255, 255, 255);
+            rb.ForeColor = Color.FromArgb(200, 200, 220);
             rb.BackColor = Color.Transparent;
             rb.AutoSize = true;
-            rb.Location = new Point(60, posY);
+            rb.Location = new Point(50, y);
             return rb;
         }
 
-        private Button CreerBouton(string texte, int posY, Color couleur) //CreerBouton() est une méthode utilitaire qui crée un bouton stylé Cyber Neon sans reecrire l code plusieurs fois 
+        private Button CreerBouton(string texte, Color couleur, int x, int y)
         {
             var btn = new Button();
             btn.Text = texte;
@@ -115,10 +142,78 @@ namespace SecurIT_Memory
             btn.FlatAppearance.BorderColor = couleur;
             btn.FlatAppearance.BorderSize = 1;
             btn.FlatAppearance.MouseOverBackColor = Color.FromArgb(30, couleur.R, couleur.G, couleur.B);
-            btn.Size = new Size(150, 45);
-            btn.Location = new Point(40, posY);
+            btn.Size = new Size(155, 42);
+            btn.Location = new Point(x, y);
             btn.Cursor = Cursors.Hand;
             return btn;
+        }
+
+        // ── Présélection des valeurs actuelles ─────────────────────────
+
+        private void PreSelectionner(int grille, ThemeCartes theme, bool hardcore)
+        {
+            if (grille == 6) rb6x6.Checked = true; else rb4x4.Checked = true;
+
+            switch (theme)
+            {
+                case ThemeCartes.Materiel: rbMateriel.Checked = true; break;
+                case ThemeCartes.Logiciel: rbLogiciel.Checked = true; break;
+                case ThemeCartes.Cryptographie: rbCrypto.Checked = true; break;
+                default: rbCyber.Checked = true; break;
+            }
+
+            chkHardcore.Checked = hardcore;
+        }
+
+        // ── Animation fond ─────────────────────────────────────────────
+
+        private void InitialiserAnim()
+        {
+            _timerAnim = new Timer();
+            _timerAnim.Interval = 30;
+            _timerAnim.Tick += (s, e) => { _animTick++; this.Invalidate(false); };
+            _timerAnim.Start();
+        }
+
+        private void FormOptions_Paint(object sender, PaintEventArgs e)
+        {
+            var g = e.Graphics;
+            using (var pen = new Pen(Color.FromArgb(10, 0, 255, 106), 1))
+            {
+                for (int x = 0; x < Width; x += 40) g.DrawLine(pen, x, 0, x, Height);
+                for (int y = 0; y < Height; y += 40) g.DrawLine(pen, 0, y, Width, y);
+            }
+            int scanY = (_animTick * 3) % Height;
+            using (var sp = new Pen(Color.FromArgb(25, 0, 255, 106), 1))
+                g.DrawLine(sp, 0, scanY, Width, scanY);
+
+            // Lignes séparatrices entre sections
+            using (var lp = new Pen(Color.FromArgb(40, 0, 255, 106), 1))
+            {
+                g.DrawLine(lp, 20, 160, Width - 20, 160);
+                g.DrawLine(lp, 20, 330, Width - 20, 330);
+            }
+        }
+
+        // ── Validation ─────────────────────────────────────────────────
+
+        private void BtnValider_Click(object sender, EventArgs e)
+        {
+            TailleGrilleChoisie = rb6x6.Checked ? 6 : 4;
+            ModeHardcoreChoisi = chkHardcore.Checked;
+
+            if (rbMateriel.Checked) ThemeChoisi = ThemeCartes.Materiel;
+            else if (rbLogiciel.Checked) ThemeChoisi = ThemeCartes.Logiciel;
+            else if (rbCrypto.Checked) ThemeChoisi = ThemeCartes.Cryptographie;
+            else ThemeChoisi = ThemeCartes.Cybersecurite;
+
+            _timerAnim?.Stop();
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            _timerAnim?.Stop();
+            base.OnFormClosing(e);
         }
     }
 }

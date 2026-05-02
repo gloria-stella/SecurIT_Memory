@@ -10,7 +10,6 @@ namespace SecurIT_Memory
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            ScoreRepository.Initialiser();
             Application.Run(new FormMenu());
         }
     }

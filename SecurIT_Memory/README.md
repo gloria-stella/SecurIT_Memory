@@ -1,6 +1,7 @@
-﻿# 🔐 SecurIT Memory — Cyber Edition
+﻿# SecurIT Memory — Cyber Edition
 
-> Jeu de cartes Memory sur le thème de la cybersécurité, développé en C# WinForms pour le **Salon de l'Innovation Tech**
+> Jeu de cartes Memory sur le thème de la cybersécurité, développé en C# WinForms pour le **Salon de l'Innovation Tech** 
+par les étudiantes : **NJUNDOM STELLA ** et **SIRAG KENZA'S**
 
 ![C#](https://img.shields.io/badge/C%23-WinForms-.NET-blue)
 ![Visual Studio](https://img.shields.io/badge/IDE-Visual%20Studio-purple)
@@ -12,6 +13,8 @@
 
 Projet réalisé pour **SecurIT**, une start-up spécialisée en cybersécurité.  
 L'objectif : créer un mini-jeu interactif pour le stand du **Salon de l'Innovation Tech**, permettant aux visiteurs de tester leur mémoire autour d'icônes de cybersécurité
+SecurIT Memory est un jeu de Memory revisité dans un univers Cyberpunk & Cybersécurité,le joueur doit retrouver des paires de cartes le plus rapidement possible, tout en gérant :
+un chronomètre en temps réel ; un compteur d’essais ; une grille dynamique ; un mode Hardcore où les cartes bougent toutes les 30 secondes
 
 ---
 
@@ -20,9 +23,11 @@ L'objectif : créer un mini-jeu interactif pour le stand du **Salon de l'Innovat
 1. Toutes les cartes sont **face cachée** au départ
 2. Le joueur **clique sur une carte** pour la retourner
 3. Il **clique sur une 2ème carte** pour tenter de trouver la paire
-4. Si les deux cartes sont **identiques** → elles restent visibles ✅
-5. Si elles sont **différentes** → elles se retournent après 1,2 seconde ❌
-6. Le joueur **gagne** quand toutes les paires sont trouvées 🎉
+4. Si les deux cartes sont **identiques** → elles restent visibles 
+5. Si elles sont **différentes** → elles se retournent après 1,2 seconde 
+6. Le joueur **gagne** quand toutes les paires sont trouvées 
+7. Le mode Harcord ajoute un **chronomètre** et un **compteur d'essais** pour plus de challenge
+
 
 ---
 
@@ -30,8 +35,10 @@ L'objectif : créer un mini-jeu interactif pour le stand du **Salon de l'Innovat
 
 ### Menu Principal
 - **Jouer** — Lance une nouvelle partie
+- **LEADERBOARD** - Enregistre automatiquement les scores , tri par meilleur temps 
 - **Options** — Choix de la taille de grille (4×4 ou 6×6)
 - **Quitter** — Ferme l'application
+
 
 ### Interface de Jeu
 - Grille générée **dynamiquement** avec des `PictureBox`
@@ -63,6 +70,7 @@ SecurIT_Memory/
 │
 ├── Carte.cs              # Classe Carte + énumération EtatCarte
 ├── JeuMemory.cs          # Logique du jeu, List<Carte>, mélange Fisher-Yates
+|── ThemeCyber.cs
 ├── FormMenu.cs           # Menu principal (Jouer / Options / Quitter)
 ├── FormJeu.cs            # Grille PictureBox, HUD, Timers, rendu Bitmap
 ├── FormOptions.cs        # Choix taille de grille
@@ -78,7 +86,7 @@ SecurIT_Memory/
 
 ---
 
-## 🧠 Notions C# utilisées
+## Notions C# utilisées
 
 | Notion | Où |
 |---|---|
@@ -93,16 +101,16 @@ SecurIT_Memory/
 
 ---
 
-## 🗂️ Répartition du travail
+## Répartition du travail
 
 | Membre | Partie |
 |---|---|
-| **[Prénom 1]** | Interface WinForms — `FormMenu`, `FormJeu`, `FormOptions`, `SonManager` |
-| **[Prénom 2]** | Logique de jeu — `Carte`, `JeuMemory`, algorithme de mélange, Timers |
+| **[Gloria]** | Interface WinForms — `FormMenu`, `FormJeu`, `FormOptions`, `SonManager` |
+| **[Kenza's]** | Logique de jeu — `Carte`, `JeuMemory`, algorithme de mélange, Timers |
 
 ---
 
-## 🚀 Installation & Lancement
+## Installation & Lancement
 
 ### Prérequis
 - Visual Studio 2019 ou supérieur
@@ -111,7 +119,7 @@ SecurIT_Memory/
 ### Étapes
 1. Cloner le dépôt :
 ```bash
-git clone https://github.com/[votre-repo]/SecurIT_Memory.git
+git clone https://github.com/gloria-stella/SecurIT_Memory
 ```
 2. Ouvrir `SecurIT_Memory.sln` dans Visual Studio
 3. Appuyer sur **F5** pour lancer
@@ -122,7 +130,7 @@ Le jeu fonctionne sans les sons si les fichiers sont absents.
 
 ---
 
-## 🎨 Style visuel
+## Style visuel
 
 Thème **Cyber Neon Extraterrestre** :
 
@@ -135,16 +143,6 @@ Thème **Cyber Neon Extraterrestre** :
 
 ---
 
-## 🏆 Grille d'évaluation visée
-
-### Partie Technique (10 pts)
-- ✅ Fonctionnalités de base (3 pts) — Jeu fonctionnel, menu, timer, victoire
-- ✅ Conception Orientée Objet (3 pts) — Classe Carte, encapsulation, structure
-- ✅ Interface WinForms (2 pts) — UI propre, PictureBox, compteurs
-- ✅ Qualité Code & Git (2 pts) — Commentaires, indentation, README
-
----
-
 ## 📄 Licence
 
-Projet scolaire — SecurIT Memory © 2025
+Projet scolaire — SecurIT Memory © 2026

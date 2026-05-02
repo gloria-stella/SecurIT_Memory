@@ -192,7 +192,7 @@ namespace SecurIT_Memory
             _timerChrono.Start();
         }
 
-        // ── Construction de la grille de PictureBox ────────────────────
+        // ── Construction de la grille de PictureBox ──
         /// <summary>
         /// Génère dynamiquement une PictureBox par carte et la lie à l'objet Carte.
         /// Chaque PictureBox est stockée dans _pbVersCarte (Dictionary).
@@ -242,7 +242,7 @@ namespace SecurIT_Memory
             }
         }
 
-        // ── Génération des Bitmap ──────────────────────────────────────
+        // ── Génération des Bitmap ───
 
         private Bitmap GenererImageDos()
         {
@@ -359,7 +359,7 @@ namespace SecurIT_Memory
             }
         }
 
-        // ── Clic sur une PictureBox ────────────────────────────────────
+        // ── Clic sur une PictureBox ───
         private void PictureBox_Click(object sender, EventArgs e)
         {
             if (_cliquesBloquees) return;
@@ -459,7 +459,7 @@ namespace SecurIT_Memory
                 this.Close();
         }
 
-        // ── Nettoyage ──────────────────────────────────────────────────
+        // ── Nettoyage 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             _timerChrono?.Stop();

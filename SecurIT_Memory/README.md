@@ -133,4 +133,4 @@ Install-Package System.Data.SQLite
 
 
 
-**Reaslisé par [GLORIA] et [KENZA'S] B2 cybersécurité PYC 2026**
+**Reaslisé par GLORIA et KENZA'S B2 cybersécurité PYC 2026**

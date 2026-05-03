@@ -1,6 +1,6 @@
 ﻿# SecurIT Memory
 
-Un jeu de cartes Memory sur le thème de la cybersécurité, développé en C# avec WinForms dans le cadre du Salon de l'Innovation Tech
+Un jeu de cartes Memory sur le thème de la cybersécurité, développé en C# avec WinForms dans le cadre du Salon de l'Innovation Tech.
 
 ---
 
@@ -14,13 +14,13 @@ Le jeu a été réalisé en binôme avec Visual Studio et C#.
 
 ## Comment jouer ?
 
-1. Lance le jeu depuis Visual Studio **(F5)** ou **ctrl + Shift + B** pour compiler puis exécuter
+1. Lance le jeu depuis Visual Studio **(F5)** **ctrl + Shift + B** pour compiler puis exécuter
 2. Sur le menu, clique sur **JOUER**
 3. Toutes les cartes sont retournées face cachée
 4. Clique sur une carte pour la retourner
 5. Clique sur une deuxième carte
-   - Si c'est la même → elles restent visibles ✅
-   - Si c'est différent → elles se retournent après 1 seconde ❌
+   - Si c'est la même → elles restent visibles 
+   - Si c'est différent → elles se retournent après 1 seconde 
 6. Continue jusqu'à avoir trouvé toutes les paires
 7. À la fin, ton temps et ton nombre d'essais sont enregistrés
 
@@ -41,7 +41,7 @@ Le jeu a été réalisé en binôme avec Visual Studio et C#.
 - Compteur d'essais
 - Compteur de paires trouvées
 - Sons à chaque action (clic, paire trouvée, erreur, victoire)
-- Blue Team en bleu, Red Team en rouge, paires trouvées en violet
+- carte bleu paires trouvées en violet
 
 **Leaderboard**
 - Les scores sont sauvegardés automatiquement
@@ -97,8 +97,8 @@ SecurIT_Memory/
 
 | Membre | Partie |
 |---|---|
-| **[GLORIA STELLA]** | Interface WinForms : FormMenu, FormJeu, FormOptions, FormLeaderboard, SonManager |
-| **[KENZA'S SIRAG]** | Logique du jeu : Carte, JeuMemory, ScoreManager, ThemeCyber |
+| **[GLORIA]** | Interface WinForms : FormMenu, FormJeu, FormOptions, FormLeaderboard, SonManager |
+| **[KENZA'S]** | Logique du jeu : Carte, JeuMemory, ScoreManager, ThemeCyber |
 
 ---
 

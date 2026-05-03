@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Carte.cs" />
     <Compile Include="Classe.cs" />
     <Compile Include="FormJeu.cs">
       <SubType>Form</SubType>

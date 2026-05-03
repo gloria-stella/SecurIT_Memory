@@ -366,6 +366,9 @@ namespace SecurIT_Memory
 
             PictureBox pb = (PictureBox)sender;
             Carte carte = _pbVersCarte[pb];
+
+            System.Diagnostics.Debug.WriteLine($"Carte: {carte.NomIcone} | RedTeam: {carte.EstRedTeam}");
+
             ResultatClic r = _jeu.TraiterClic(carte);
 
             switch (r)

@@ -294,18 +294,45 @@ namespace SecurIT_Memory
         private List<Carte> GenererCartes(int tailleGrille, ThemeCartes theme)
         {
             int nombrePaires = (tailleGrille * tailleGrille) / 2;
-            IconeCarte[] icones = CatalogueIcones.ParTheme(theme);
+            IconeCarte[] toutesIcones = CatalogueIcones.ParTheme(theme);
             var liste = new List<Carte>();
 
-            for (int i = 0; i < nombrePaires; i++)
+            // Mélanger les icônes disponibles pour avoir un mix Blue/Red Team
+            IconeCarte[] iconesBlue = FiltrerEquipe(toutesIcones, false);
+            IconeCarte[] iconesRed = FiltrerEquipe(toutesIcones, true);
+
+            int nbRed = nombrePaires / 2;       // moitié Red Team
+            int nbBlue = nombrePaires - nbRed;   // moitié Blue Team
+
+            // Ajouter les paires Blue Team
+            for (int i = 0; i < nbBlue; i++)
             {
-                IconeCarte icone = icones[i % icones.Length];
-                // Créer les deux cartes de la paire (même IdPaire)
-                liste.Add(new Carte(i, icone.Nom, icone.Emoji, icone.RedTeam));
-                liste.Add(new Carte(i, icone.Nom, icone.Emoji, icone.RedTeam));
+                IconeCarte icone = iconesBlue[i % iconesBlue.Length];
+                liste.Add(new Carte(i, icone.Nom, icone.Emoji, false));
+                liste.Add(new Carte(i, icone.Nom, icone.Emoji, false));
+            }
+
+            // Ajouter les paires Red Team
+            for (int i = 0; i < nbRed; i++)
+            {
+                IconeCarte icone = iconesRed[i % iconesRed.Length];
+                int id = nbBlue + i;
+                liste.Add(new Carte(id, icone.Nom, icone.Emoji, true));
+                liste.Add(new Carte(id, icone.Nom, icone.Emoji, true));
             }
 
             return liste;
+        }
+
+        private IconeCarte[] FiltrerEquipe(IconeCarte[] icones, bool redTeam)
+        {
+            var liste = new List<IconeCarte>();
+            foreach (var ic in icones)
+                if (ic.RedTeam == redTeam) liste.Add(ic);
+            // Si pas assez d'icônes d'une équipe, utiliser toutes les icônes
+            if (liste.Count == 0)
+                foreach (var ic in icones) liste.Add(ic);
+            return liste.ToArray();
         }
 
         /// <summary>Mélange une liste de cartes avec l'algorithme Fisher-Yates.</summary>

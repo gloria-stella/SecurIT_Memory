@@ -18,14 +18,14 @@ namespace SecurIT_Memory
     /// </summary>
     public class Carte
     {
-        // ── Champs privés ──────────────────────────────────────────────
+        // Champs privés   (pour respecter lencapsulation , on ne peut les modifier que a travers des methodes 
         private int _idPaire;
         private string _nomIcone;
-        private string _cheminImage;  // Emoji ou chemin PNG
+        private string _cheminImage;  // Emoji
         private EtatCarte _etat;
         private bool _estRedTeam;
 
-        // ── Propriétés publiques (encapsulation) ───────────────────────
+        // Propriétés publiques (encapsulation) 
 
         /// <summary>Identifiant de paire. Deux cartes avec le même ID forment une paire.</summary>
         public int IdPaire
@@ -74,12 +74,12 @@ namespace SecurIT_Memory
             get { return _etat == EtatCarte.Trouvee; }
         }
 
-        // ── Constructeur ───────────────────────────────────────────────
+        // Constructeur
 
-        /// <summary>Crée une nouvelle carte avec toutes ses informations.</summary>
-        /// <param name="idPaire">Identifiant partagé avec la carte jumelle.</param>
-        /// <param name="nomIcone">Nom affiché sur la face de la carte.</param>
-        /// <param name="cheminImage">Emoji ou chemin PNG de l'icône.</param>
+        /// <summary>Crée une nouvelle carte avec toutes ses informations </summary>
+        /// <param name="idPaire">Identifiant partagé avec la carte jumelle </param>
+        /// <param name="nomIcone">Nom affiché sur la face de la carte</param>
+        /// <param name="cheminImage">Emoji </param>
         /// <param name="estRedTeam">True si la carte représente une menace Red Team.</param>
         public Carte(int idPaire, string nomIcone, string cheminImage, bool estRedTeam = false)
         {
@@ -89,11 +89,11 @@ namespace SecurIT_Memory
             _estRedTeam = estRedTeam;
             _etat = EtatCarte.Cachee;
 
-            // AJOUTE CETTE LIGNE TEMPORAIRE
+            // ligne de debug ( pour moi , voir ce qui ne va pas dans la création des cartes )
             System.Diagnostics.Debug.WriteLine($"[CARTE CRÉÉE] {nomIcone} | RedTeam: {estRedTeam}");
         }
 
-        // ── Méthodes publiques ─────────────────────────────────────────
+        // ─ Méthodes publiques 
 
         /// <summary>Révèle la carte (retournement face visible temporaire).</summary>
         public void Reveler()
@@ -133,9 +133,5 @@ namespace SecurIT_Memory
             return this._idPaire == autreCarte._idPaire && this != autreCarte;
         }
 
-        public override string ToString()
-        {
-            return $"Carte[ID={_idPaire}, Nom={_nomIcone}, Etat={_etat}, RedTeam={_estRedTeam}]";
-        }
     }
 }

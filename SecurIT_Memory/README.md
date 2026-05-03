@@ -130,3 +130,7 @@ Install-Package System.Data.SQLite
 - ✅ Thèmes de cartes (4 thèmes différents)
 - ✅ Leaderboard avec base de données SQLite
 - ✅ Mode Hardcore
+
+
+
+**Reaslisé par [GLORIA] et [KENZA'S] B2 cybersécurité PYC 2026**

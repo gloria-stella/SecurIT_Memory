@@ -2,13 +2,12 @@
 
 namespace SecurIT_Memory
 {
-    /// <summary>
-    /// Classe statique centralisant toutes les couleurs et constantes visuelles du thème Cyber Neon.
-    /// Permet de modifier le style en un seul endroit.
-    /// </summary>
+    
+    // Classe statique centralisant toutes les couleurs et constantes visuelles du thème Cyber Neon
+    // Permet de modifier le style en un seul endroit
     public static class ThemeCyber
     {
-        // ── Palette de couleurs ────────────────────────────────────────
+        // ── Palette de couleurs 
         public static readonly Color NOIR = Color.FromArgb(5, 5, 5);
         public static readonly Color GRIS_DARK = Color.FromArgb(26, 26, 26);
         public static readonly Color VERT_NEON = Color.FromArgb(0, 255, 106);
@@ -18,7 +17,7 @@ namespace SecurIT_Memory
         public static readonly Color BLANC = Color.White;
         public static readonly Color VERT_SOMBRE = Color.FromArgb(0, 80, 40);
 
-        // ── Couleurs spécifiques Blue Team / Red Team ──────────────────
+        // ── Couleurs spécifiques Blue Team / Red Team
         public static readonly Color FOND_BLUE_TEAM = Color.FromArgb(15, 0, 100, 200);
         public static readonly Color BORDURE_BLUE_TEAM = Color.FromArgb(0, 150, 255);
         public static readonly Color FOND_RED_TEAM = Color.FromArgb(30, 200, 0, 50);
@@ -26,15 +25,15 @@ namespace SecurIT_Memory
         public static readonly Color FOND_TROUVEE = Color.FromArgb(40, 179, 0, 255);
         public static readonly Color BORDURE_TROUVEE = Color.FromArgb(179, 0, 255);
 
-        // ── Couleurs grille de fond ────────────────────────────────────
+        // ── Couleurs grille de fond 
         public static readonly Color GRILLE_FOND = Color.FromArgb(8, 0, 255, 106);
         public static readonly Color SCAN_LIGNE = Color.FromArgb(20, 0, 255, 106);
         public static readonly Color DOS_CARTE = Color.FromArgb(40, 0, 255, 106);
     }
 
-    /// <summary>
-    /// Enumération des thèmes de cartes disponibles dans les Options.
-    /// </summary>
+    
+    // Enumération des thèmes de cartes disponibles dans les Options.
+   
     public enum ThemeCartes
     {
         Cybersecurite,   // Thème par défaut : virus, pare-feu, etc.
@@ -43,12 +42,12 @@ namespace SecurIT_Memory
         Cryptographie    // Clés, algorithmes, certificats...
     }
 
-    /// <summary>
-    /// Données d'une icône de carte : emoji, nom, appartenance Red Team, thème.
-    /// </summary>
+   
+    // Données d'une icône de carte : emoji, nom, appartenance Red Team, thème.
+    
     public class IconeCarte
     {
-        public string Emoji { get; set; }
+        public string Emoji { get; set; } // creato dune proprité ( get = lire la valeur et set = modifier la valeur)
         public string Nom { get; set; }
         public bool RedTeam { get; set; }
         public ThemeCartes Theme { get; set; }
@@ -62,14 +61,15 @@ namespace SecurIT_Memory
         }
     }
 
-    /// <summary>
-    /// Catalogue de toutes les icônes disponibles pour chaque thème.
-    /// </summary>
+    
+    // Catalogue de toutes les icônes disponibles pour chaque thème.
+    
     public static class CatalogueIcones
     {
         public static readonly IconeCarte[] Toutes = new IconeCarte[]
         {
-            // ── Thème Cybersécurité (défaut) ───────────────────────────
+            // ── Thème Cybersécurité (défaut) , la methode parTheme() filtre 
+            // ce catalogue pour ne retourner que les icones du thème sélectionné dans les options
             new IconeCarte("🛡",  "Pare-feu",    false, ThemeCartes.Cybersecurite),
             new IconeCarte("🔐", "Chiffrement",  false, ThemeCartes.Cybersecurite),
             new IconeCarte("🔒", "Cadenas",      false, ThemeCartes.Cybersecurite),
@@ -150,10 +150,10 @@ namespace SecurIT_Memory
             new IconeCarte("🧬", "DNA-key",      true,  ThemeCartes.Cryptographie),
         };
 
-        /// <summary>Retourne les icônes filtrées par thème.</summary>
-        public static IconeCarte[] ParTheme(ThemeCartes theme)
+        // Retourne les icônes filtrées par thème
+        public static IconeCarte[] ParTheme(ThemeCartes theme) 
         {
-            var liste = new System.Collections.Generic.List<IconeCarte>();
+            var liste = new System.Collections.Generic.List<IconeCarte>(); // creation d'une liste vide qui va contenir les icones filtrées 
             foreach (var ic in Toutes)
                 if (ic.Theme == theme) liste.Add(ic);
             return liste.ToArray();

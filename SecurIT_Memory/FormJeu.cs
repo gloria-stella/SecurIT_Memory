@@ -6,20 +6,20 @@ using System.Windows.Forms;
 
 namespace SecurIT_Memory
 {
-    /// <summary>
-    /// Formulaire principal du jeu Memory SecurIT.
-    /// Gère la grille de PictureBox, le HUD, les timers et le rendu visuel.
-    /// Blue Team = bleu | Red Team = rouge | Paire trouvée = violet
-    /// </summary>
+    
+    // Formulaire principal du jeu 
+    // Gère la grille de PictureBox, le HUD, les timers et le rendu visuel
+    // Blue Team = bleu | Red Team = rouge | Paire trouvée = violet
+  
     public class FormJeu : Form
     {
-        // ── Constantes ─────────────────────────────────────────────────
+        // Constantes ( dimension fixe du jeu )
         private const int TAILLE_CARTE = 90;
         private const int ESPACEMENT = 8;
         private const int MARGE = 16;
         private const int HAUTEUR_HUD = 72;
 
-        // ── État ───────────────────────────────────────────────────────
+        // État 
         private JeuMemory _jeu;
         private int _tailleGrille;
         private ThemeCartes _theme;
@@ -36,9 +36,10 @@ namespace SecurIT_Memory
         private int _animTick = 0;
         private bool _cliquesBloquees = false;
 
-        // PictureBox liées à leurs cartes (comme demandé dans le TP)
+        // PictureBox liées à leurs cartes 
         private Dictionary<PictureBox, Carte> _pbVersCarte = new Dictionary<PictureBox, Carte>();
 
+        //constructeur
         public FormJeu(int tailleGrille, ThemeCartes theme = ThemeCartes.Cybersecurite, bool hardcore = false)
         {
             _tailleGrille = tailleGrille;
@@ -58,7 +59,7 @@ namespace SecurIT_Memory
             DemarrerPartie();
         }
 
-        // ── Construction de l'interface ────────────────────────────────
+        //  Construction de l'interface
         private void InitialiserUI()
         {
             int largGrille = _tailleGrille * (TAILLE_CARTE + ESPACEMENT) + ESPACEMENT;
@@ -75,7 +76,7 @@ namespace SecurIT_Memory
             this.BackColor = ThemeCyber.NOIR;
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.DoubleBuffered = true;
-            this.Paint += FormJeu_Paint;
+            this.Paint += FormJeu_Paint; // Fond animé
 
             _lblChrono = CreerLabelHUD("⏱  00:00", ThemeCyber.VERT_NEON, new Point(MARGE, 14));
             _lblEssais = CreerLabelHUD("ESSAIS : 0", ThemeCyber.BLANC, new Point(MARGE + 160, 14));
@@ -83,7 +84,7 @@ namespace SecurIT_Memory
 
             // Label HARDCORE (visible seulement en mode hardcore)
             _lblHardcore = new Label();
-            _lblHardcore.Text = "⚡ HARDCORE";
+            _lblHardcore.Text = "⚡ HARDCORE"; // _lblHardcore = un label privé 
             _lblHardcore.Font = new Font("Courier New", 9, FontStyle.Bold);
             _lblHardcore.ForeColor = ThemeCyber.ROUGE_NEON;
             _lblHardcore.BackColor = Color.Transparent;
@@ -91,7 +92,7 @@ namespace SecurIT_Memory
             _lblHardcore.Location = new Point(MARGE, 40);
             _lblHardcore.Visible = _modeHardcore;
 
-            _btnRejouer = new Button();
+            _btnRejouer = new Button(); // _btnRejouer = champ privé de type button
             _btnRejouer.Text = "↺ REJOUER";
             _btnRejouer.Font = new Font("Courier New", 9, FontStyle.Bold);
             _btnRejouer.ForeColor = ThemeCyber.BLEU_NEON;
@@ -104,7 +105,7 @@ namespace SecurIT_Memory
             _btnRejouer.Cursor = Cursors.Hand;
             _btnRejouer.Click += (s, e) => DemarrerPartie();
 
-            _panelGrille = new Panel();
+            _panelGrille = new Panel(); // panel (conteneur) privé
             _panelGrille.Size = new Size(largGrille, hautGrille);
             _panelGrille.Location = new Point(MARGE, HAUTEUR_HUD + MARGE);
             _panelGrille.BackColor = Color.FromArgb(10, 0, 10);
@@ -130,7 +131,7 @@ namespace SecurIT_Memory
             return l;
         }
 
-        // ── Fonds animés ───────────────────────────────────────────────
+        // Fonds animés 
         private void FormJeu_Paint(object sender, PaintEventArgs e)
         {
             var g = e.Graphics;
@@ -156,7 +157,7 @@ namespace SecurIT_Memory
             }
         }
 
-        // ── Timers ─────────────────────────────────────────────────────
+        // Timers 
         private void InitialiserTimers()
         {
             _timerChrono = new Timer();
@@ -178,7 +179,7 @@ namespace SecurIT_Memory
             _timerAnimFond.Start();
         }
 
-        // ── Démarrage d'une partie ─────────────────────────────────────
+        // Démarrage d'une partie 
         private void DemarrerPartie()
         {
             _timerChrono.Stop();
@@ -192,11 +193,9 @@ namespace SecurIT_Memory
             _timerChrono.Start();
         }
 
-        // ── Construction de la grille de PictureBox ──
-        /// <summary>
-        /// Génère dynamiquement une PictureBox par carte et la lie à l'objet Carte.
-        /// Chaque PictureBox est stockée dans _pbVersCarte (Dictionary).
-        /// </summary>
+        //  Construction de la grille de PictureBox 
+        // Génère dynamiquement une PictureBox par carte et la lie à l'objet Carte
+        // Chaque PictureBox est stockée dans _pbVersCarte (Dictionary)
         private void ConstruireGrille()
         {
             // Stocker les images à libérer APRÈS avoir vidé le panel
@@ -242,7 +241,7 @@ namespace SecurIT_Memory
             }
         }
 
-        // ── Génération des Bitmap ───
+        // ── Génération des Bitmap ( image composé de pixels 
 
         private Bitmap GenererImageDos()
         {
@@ -270,10 +269,10 @@ namespace SecurIT_Memory
             return bmp;
         }
 
-        /// <summary>
-        /// Génère le Bitmap de la face d'une carte.
-        /// Blue Team = bleu | Red Team = rouge | Trouvée = violet
-        /// </summary>
+     
+        // Génère le Bitmap de la face d'une carte.
+        // Blue Team = bleu | Red Team = rouge | Trouvée = violet
+      
         private Bitmap GenererImageFace(Carte carte, bool estTrouvee)
         {
             int w = TAILLE_CARTE;
@@ -368,7 +367,6 @@ namespace SecurIT_Memory
             Carte carte = _pbVersCarte[pb];
 
             System.Diagnostics.Debug.WriteLine($"Carte: {carte.NomIcone} | RedTeam: {carte.EstRedTeam}");
-
             ResultatClic r = _jeu.TraiterClic(carte);
 
             switch (r)
@@ -422,14 +420,14 @@ namespace SecurIT_Memory
             ConstruireGrille();
         }
 
-        // ── HUD ────────────────────────────────────────────────────────
+        // ── HUD 
         private void MettreAJourHUD()
         {
             _lblEssais.Text = $"ESSAIS : {_jeu.NombreEssais}";
             _lblPaires.Text = $"PAIRES : {_jeu.NombrePairesTrouvees} / {_jeu.NombrePairesTotal}";
         }
 
-        // ── Victoire ───────────────────────────────────────────────────
+        // ── Victoire 
         private void AfficherVictoire()
         {
             _timerChrono.Stop();
@@ -462,7 +460,7 @@ namespace SecurIT_Memory
                 this.Close();
         }
 
-        // ── Nettoyage 
+        // Nettoyage 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             _timerChrono?.Stop();

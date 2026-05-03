@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
+using System.Collections.Generic; // liste et dict 
+using System.Windows.Forms; // int gra 
 
 namespace SecurIT_Memory
 {
@@ -23,7 +23,7 @@ namespace SecurIT_Memory
     /// </summary>
     public class JeuMemory
     {
-        // ── Champs privés ──────────────────────────────────────────────
+        //  Champs privés ( encapsulation)
         private List<Carte> _cartes;
         private Carte _premiereCarteSelectionnee;
         private Carte _deuxiemeCarteSelectionnee;
@@ -35,26 +35,21 @@ namespace SecurIT_Memory
         private ThemeCartes _themeActuel;
         private Random _rng;
 
-        // ── Timers ─────────────────────────────────────────────────────
-        /// <summary>
-        /// Timer de délai : attend 1,2s avant de retourner les cartes non-paires.
-        /// PIÈGE : bloque tous les clics pendant ce délai (voir TP).
-        /// </summary>
+       
+        // Timer de délai : attend 1,2s avant de retourner les cartes non-paires.
+        // PIÈGE: bloque tous les clics pendant ce délai (voir TP).
         private Timer _timerDelaiRetournement;
 
-        /// <summary>
-        /// Timer Hardcore : toutes les 30s, échange aléatoirement
-        /// les positions des cartes non-trouvées.
-        /// </summary>
-        private Timer _timerHardcore;
+        //  mélange les cartes toutes les 30s en mode hardcore
+        private Timer _timerHardcore; 
 
-        // ── Constantes ─────────────────────────────────────────────────
+        //  Constantes 
         private const int DELAI_RETOURNEMENT_MS = 1200; // 1,2 secondes
         private const int DELAI_HARDCORE_MS = 30000; // 30 secondes
 
-        // ── Propriétés publiques ───────────────────────────────────────
+        //  Propriétés publiques 
 
-        /// <summary>Liste de toutes les cartes de la partie (ordre mélangé).</summary>
+        // Liste de toutes les cartes de la partie (ordre mélangé)
         public List<Carte> Cartes
         {
             get { return _cartes; }
@@ -66,43 +61,43 @@ namespace SecurIT_Memory
             get { return _nombreEssais; }
         }
 
-        /// <summary>Nombre de paires trouvées.</summary>
+        // Nombre de paires trouvées
         public int NombrePairesTrouvees
         {
             get { return _nombrePairesTrouvees; }
         }
 
-        /// <summary>Nombre total de paires dans la partie.</summary>
+        // Nombre total de paires dans la partie 
         public int NombrePairesTotal
         {
             get { return (_tailleGrille * _tailleGrille) / 2; }
         }
 
-        /// <summary>Taille de la grille (4 pour 4x4, 6 pour 6x6).</summary>
+        // Taille de la grille (4 pour 4x4, 6 pour 6x6)
         public int TailleGrille
         {
             get { return _tailleGrille; }
         }
 
-        /// <summary>True si le mode Hardcore est activé.</summary>
+        // True si le mode Hardcore est activé
         public bool ModeHardcore
         {
             get { return _modeHardcore; }
         }
 
-        /// <summary>True si toutes les paires ont été trouvées.</summary>
+        // True si toutes les paires ont été trouvées
         public bool EstTerminee
         {
             get { return _nombrePairesTrouvees >= NombrePairesTotal; }
         }
 
-        /// <summary>True si une première carte est retournée et attend la seconde.</summary>
+        // True si une première carte est retournée et attend la seconde 
         public bool AttenteDeuxiemeCarte
         {
             get { return _premiereCarteSelectionnee != null && _deuxiemeCarteSelectionnee == null; }
         }
 
-        // ── Événements ─────────────────────────────────────────────────
+        // Événements 
 
         /// <summary>Déclenché quand les deux cartes non-paires doivent être retournées.</summary>
         public event EventHandler DemandeRetournement;
@@ -110,7 +105,7 @@ namespace SecurIT_Memory
         /// <summary>Déclenché en mode Hardcore quand les cartes sont repositionnées.</summary>
         public event EventHandler HardcoreReposition;
 
-        // ── Constructeur ───────────────────────────────────────────────
+        // ── Constructeur
 
         public JeuMemory()
         {
@@ -119,7 +114,7 @@ namespace SecurIT_Memory
             InitialiserTimers();
         }
 
-        // ── Initialisation des timers ──────────────────────────────────
+        // Initialisation des timers
 
         private void InitialiserTimers()
         {
@@ -134,7 +129,7 @@ namespace SecurIT_Memory
             _timerHardcore.Tick += TimerHardcore_Tick;
         }
 
-        // ── Méthodes publiques ─────────────────────────────────────────
+        // Méthodes publiques 
 
         /// <summary>
         /// Initialise et démarre une nouvelle partie.
@@ -169,9 +164,9 @@ namespace SecurIT_Memory
                 _timerHardcore.Start();
         }
 
-        /// <summary>
-        /// Traite le clic du joueur sur une carte.
-        /// </summary>
+      
+        // Traite le clic du joueur sur une carte.
+     
         /// <param name="carte">La carte cliquée.</param>
         /// <returns>Le résultat de l'action.</returns>
         public ResultatClic TraiterClic(Carte carte)
@@ -182,7 +177,7 @@ namespace SecurIT_Memory
 
             carte.Reveler();
 
-            // ── Première carte sélectionnée ────────────────────────────
+            // Première carte sélectionnée 
             if (_premiereCarteSelectionnee == null)
             {
                 _premiereCarteSelectionnee = carte;
@@ -206,17 +201,16 @@ namespace SecurIT_Memory
             }
             else
             {
-                // ❌ Pas une paire → déclencher le timer de délai
+                // Pas une paire → déclencher le timer de délai
                 // IMPORTANT : les clics doivent être bloqués dans FormJeu pendant ce délai !
                 _timerDelaiRetournement.Start();
                 return ResultatClic.NonPaire;
             }
         }
 
-        /// <summary>
-        /// Remet les deux cartes non-correspondantes face cachée.
-        /// Appelé automatiquement par le timer de délai.
-        /// </summary>
+       
+        // Remet les deux cartes non-correspondantes face cachée.
+        // Appelé automatiquement par le timer de délai
         public void RetournerCartesNonPaire()
         {
             _premiereCarteSelectionnee?.Cacher();
@@ -232,7 +226,7 @@ namespace SecurIT_Memory
             _partieEnCours = false;
         }
 
-        // ── Timers (événements internes) ───────────────────────────────
+        // Timers (événements internes) 
 
         /// <summary>
         /// Tick du timer de délai : retourne les cartes et notifie le formulaire.
@@ -288,9 +282,9 @@ namespace SecurIT_Memory
             HardcoreReposition?.Invoke(this, EventArgs.Empty);
         }
 
-        // ── Méthodes privées ───────────────────────────────────────────
+        // Méthodes privées 
 
-        /// <summary>Génère la liste de cartes en paires pour le thème et la taille donnés.</summary>
+        // Génère la liste de cartes en paires pour le thème et la taille donnés 
         private List<Carte> GenererCartes(int tailleGrille, ThemeCartes theme)
         {
             int nombrePaires = (tailleGrille * tailleGrille) / 2;
@@ -335,7 +329,7 @@ namespace SecurIT_Memory
             return liste.ToArray();
         }
 
-        /// <summary>Mélange une liste de cartes avec l'algorithme Fisher-Yates.</summary>
+        // ici on utilise l'algo de fisher-yate pour un melange parfaut 
         private void MelangerCartes(List<Carte> cartes)
         {
             int n = cartes.Count;
@@ -344,11 +338,11 @@ namespace SecurIT_Memory
                 int j = _rng.Next(0, i + 1);
                 Carte tmp = cartes[i];
                 cartes[i] = cartes[j];
-                cartes[j] = tmp;
+                cartes[j] = tmp; // pour echanger les valeurs on stock le 1er dans une variable temporaire et on fait les echanges
             }
         }
 
-        /// <summary>Remet à zéro la sélection courante.</summary>
+        // remet les deux cartes selectionnés a nul 
         private void ResetSelection()
         {
             _premiereCarteSelectionnee = null;

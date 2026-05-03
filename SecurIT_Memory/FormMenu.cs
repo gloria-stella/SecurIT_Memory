@@ -1,16 +1,16 @@
 ﻿using System;
-using System.Drawing;
+using System.Drawing; // couleurs police dessin
 using System.Windows.Forms;
 
 namespace SecurIT_Memory
 {
-    /// <summary>
-    /// Menu principal de l'application SecurIT Memory.
-    /// Donne accès à : Jouer, Leaderboard, Options, Quitter.
-    /// </summary>
+   
+    // Menu principal de l'application SecurIT Memory.
+    //  Donne accès à : Jouer, Leaderboard, Options, Quitter.
+  
     public class FormMenu : Form
     {
-        private Label _lblTitre;
+        private Label _lblTitre; // tt les elements visuel dans notre menu
         private Label _lblSousTitre;
         private Button _btnJouer;
         private Button _btnLeaderboard;
@@ -31,6 +31,7 @@ namespace SecurIT_Memory
         public static readonly Color BLEU_NEON = ThemeCyber.BLEU_NEON;
         public static readonly Color ROUGE_NEON = ThemeCyber.ROUGE_NEON;
 
+        //constructeur du menu 
         public FormMenu()
         {
             ScoreManager.Initialiser();
@@ -117,14 +118,14 @@ namespace SecurIT_Memory
         {
             using (Pen p = new Pen(Color.FromArgb(130, 0, 255, 106), 1))
             {
-                g.DrawLine(p, x, y, x + dx * 16, y);
+                g.DrawLine(p, x, y, x + dx * 16, y); // dessiner les coins 
                 g.DrawLine(p, x, y, x, y + dy * 16);
             }
         }
 
         private void InitialiserAnim()
         {
-            _timerAnim = new Timer();
+            _timerAnim = new Timer(); //ttes les 30 ms la ligne de san bouge 
             _timerAnim.Interval = 30;
             _timerAnim.Tick += (s, e) => { _animTick++; this.Invalidate(); };
             _timerAnim.Start();

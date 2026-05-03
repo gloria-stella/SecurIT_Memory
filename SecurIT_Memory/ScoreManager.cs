@@ -15,6 +15,7 @@ namespace SecurIT_Memory
         public int Grille { get; set; }
         public DateTime Date { get; set; }
 
+        // le constructeur  qui permet de créer une entrée de score
         public EntreeScore(string nom, TimeSpan temps, int essais, int grille, DateTime date)
         {
             Nom = nom;
@@ -26,18 +27,16 @@ namespace SecurIT_Memory
 
         public override string ToString()
         {
-            return $"{Nom} | {Temps.Minutes:00}:{Temps.Seconds:00} | {Essais} essais | {Grille}x{Grille}";
+            return $"{Nom} | {Temps.Minutes:00}:{Temps.Seconds:00} | {Essais} essais | {Grille}x{Grille}"; // nous sert a afficher un score proprement 
         }
     }
 
-    /// <summary>
-    /// Gestionnaire des scores et du leaderboard.
-    /// Utilise SQLite pour la persistance des données (bonus SQL du TP).
-    /// Si SQLite n'est pas disponible, bascule automatiquement sur un fichier texte.
-    /// </summary>
-    public static class ScoreManager
+    
+    // Gestionnaire des scores et du leaderboard.
+    
+    public static class ScoreManager 
     {
-        // ── Chemins ────────────────────────────────────────────────────
+        //  Chemins ou sont  stocker les scores 
         private static readonly string DB_PATH = Path.Combine(
             AppDomain.CurrentDomain.BaseDirectory, "scores.db");
         private static readonly string SCORES_TXT = Path.Combine(
@@ -45,9 +44,9 @@ namespace SecurIT_Memory
 
         private static bool _sqlDisponible = false;
 
-        // ── Initialisation ─────────────────────────────────────────────
+        // Initialisation
 
-        /// <summary>Initialise la base de données (ou le fichier texte en fallback).</summary>
+        // Initialise la base de données ( Le jeu essaie d’utiliser SQLite et si ça échoue il utilisera un fichier texte)
         public static void Initialiser()
         {
             try
@@ -57,13 +56,13 @@ namespace SecurIT_Memory
             }
             catch
             {
-                _sqlDisponible = false; // Fallback fichier texte
+                _sqlDisponible = false; 
             }
         }
 
-        // ── Sauvegarde d'un score ──────────────────────────────────────
+        //  Sauvegarde d'un score 
 
-        /// <summary>Sauvegarde un score dans la base de données ou le fichier texte.</summary>
+        // Sauvegarde un score dans la base de données ou le fichier texte 
         public static void SauvegarderScore(string nom, TimeSpan temps, int essais, int grille)
         {
             try
@@ -76,10 +75,10 @@ namespace SecurIT_Memory
             catch { }
         }
 
-        /// <summary>
-        /// Vérifie si un score bat le record actuel pour une taille de grille.
-        /// Critère principal : temps. Critère secondaire : essais.
-        /// </summary>
+        
+        // Vérifie si un score bat le record actuel pour une taille de grille
+        // Critère principal : temps. Critère secondaire : essais
+       
         public static bool EstNouveauRecord(TimeSpan temps, int essais, int grille)
         {
             try
@@ -119,14 +118,14 @@ namespace SecurIT_Memory
             catch { return new List<EntreeScore>(); }
         }
 
-        // ── SQLite ─────────────────────────────────────────────────────
+        // SQLite 
 
         private static void CreerTableSiInexistante()
         {
             using (var conn = new SQLiteConnection($"Data Source={DB_PATH};Version=3;"))
             {
-                conn.Open();
-                string sql = @"CREATE TABLE IF NOT EXISTS scores (
+                conn.Open(); // creer la table si elle n'existe pas 
+                string sql = @"CREATE TABLE IF NOT EXISTS scores ( 
                     id      INTEGER PRIMARY KEY AUTOINCREMENT,
                     nom     TEXT    NOT NULL,
                     temps   INTEGER NOT NULL,
